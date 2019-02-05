@@ -1,5 +1,5 @@
 import random
-import pylab
+# import pylab
 
 class Game:
     '''la classe du jeu, qui comprend un board et des methodes pour progresser'''
@@ -64,46 +64,47 @@ class Game:
         '''on lance un de'''
         resultat = dice.throw()
         if resultat == 'tortue':
-            print 'yeah une tortue !'
+            print('yeah une tortue !')
             self.position = self.getNextTurtle()
             self.turn += 1
-            print 'un tour de plus !'
+            print('un tour de plus !')
             return
         else:
             self.position += resultat
             if self.board[self.position] == 'laitue':
-                print 'yeah ! une laitue. on rebrasse'
+                print('yeah ! une laitue. on rebrasse')
                 self.playTurnTortue(dice)
             else:
                 self.turn += 1
-                print 'un tour de plus !'
+                print('un tour de plus !')
                 return
 
     def playTurnLapin(self, dice):
         '''on lance un de'''
         resultat = dice.throw()
         if resultat == 'lievre':
-            print 'yeah un lapin !'
+            print('yeah un lapin !')
             self.position = self.getNextRabbit()
             self.turn += 1
-            print 'un tour de plus !'
+            print('un tour de plus !')
             return
         elif resultat == 'sleep':
-            print 'non... on dort'
+            print('non... on dort')
             self.turn+= 1
-            print 'un tour de plus !'
+            print('un tour de plus !')
         else:
             self.position += resultat
             if self.board[self.position] == 'carotte':
-                print 'yeah ! une carotte. on rebrasse'
+                print('yeah ! une carotte. on rebrasse')
                 self.playTurnLapin(dice)
             elif self.board[self.position] == 'sieste':
-                print 'oh non... la sieste. on recule de deux'
+                print('oh non... la sieste. on recule de deux')
                 self.position -= 2
-                print 'un tour de plus!'
+                self.turn += 1
+                print('un tour de plus!')
             else:
                 self.turn += 1
-                print 'un tour de plus !'
+                print('un tour de plus !')
                 return
 
 
@@ -127,7 +128,7 @@ class TurtleDice:
 
     def throw(self):
         result = random.choice(self.values)
-        print 'on a brasse: ', result
+        print('on a brasse: {}'.format(result))
         return result
 
 class RabbitDice:
@@ -138,7 +139,7 @@ class RabbitDice:
 
     def throw(self):
         result = random.choice(self.values)
-        print 'on a brasse: ', result
+        print('on a brasse: {}'.format(result))
         return result
 
 #le jeu
@@ -149,11 +150,11 @@ def jouerPartieTortue():
 
     while newGame.position < len(newGame.board):
         try:
-            print 'le tour ', newGame.turn, ' commence'
+            print('le tour {} commence'.format(newGame.turn))
             newGame.playTurnTortue(newDice)
-            print 'la nouvelle position est ', newGame.position
+            print('la nouvelle position est {}'.format(newGame.position))
         except(KeyError):
-            print 'la partie est terminee en ', newGame.turn, ' tours.'
+            print('la partie est terminee en {} tours'.format(newGame.turn))
             return newGame.turn
 
 def jouerPartieLapin():
@@ -162,11 +163,11 @@ def jouerPartieLapin():
 
     while newGame.position < len(newGame.board):
         try:
-            print 'le tour ', newGame.turn, ' commence'
+            print('le tour {} commence'.format(newGame.turn))
             newGame.playTurnLapin(newDice)
-            print 'la nouvelle position est ', newGame.position
+            print('la nouvelle position est {}'.format(newGame.position))
         except(KeyError):
-            print 'la partie est terminee en ', newGame.turn, ' tours.'
+            print('la partie est terminee en {} tours'.format(newGame.turn))
             return newGame.turn
 
 toursTortue = []
@@ -177,10 +178,10 @@ for i in range(0, 10000):
 for i in range(0, 10000):
     toursLapin.append(jouerPartieLapin())
 
-print 'le nb de tours moyens pour la tortue est: ', float(sum(toursTortue))/len(toursTortue)
-print 'le nb de tours moyens pour le lapin est: ', float(sum(toursLapin))/len(toursLapin)
+print('le nb de tours moyens pour la tortue est: {}'.format(float(sum(toursTortue))/len(toursTortue)))
+print('le nb de tours moyens pour le lapin est: {}'.format(float(sum(toursLapin))/len(toursLapin)))
 
-pylab.hist(toursTortue)
-pylab.show()
-pylab.hist(toursLapin)
-pylab.show()
+# pylab.hist(toursTortue)
+# pylab.show()
+# pylab.hist(toursLapin)
+# pylab.show()
