@@ -1,5 +1,7 @@
 import random
-# import seaborn as sns
+import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
 
 class Game:
     '''la classe du jeu, qui comprend un board et des methodes pour progresser'''
@@ -196,16 +198,19 @@ def jouerPartieLapin(verbose=False):
 
 toursTortue = []
 toursLapin = []
-for i in range(0, 100):
-    toursTortue.append(jouerPartieTortue(verbose=True))
+for i in range(0, 10000):
+    toursTortue.append(jouerPartieTortue(verbose=False))
 
-for i in range(0, 100):
+for i in range(0, 10000):
     toursLapin.append(jouerPartieLapin())
 
 print('le nb de tours moyens pour la tortue est: {}'.format(float(sum(toursTortue))/len(toursTortue)))
 print('le nb de tours moyens pour le lapin est: {}'.format(float(sum(toursLapin))/len(toursLapin)))
 
-# pylab.hist(toursTortue)
-# pylab.show()
-# pylab.hist(toursLapin)
-# pylab.show()
+tab_tours_tortues = [{"joueur":"tortue","partie":g,"tours":t} for g,t in enumerate(toursTortue)]
+tab_tours_lievre = [{"joueur":"lievre","partie":g,"tours":t} for g,t in enumerate(toursLapin)]
+
+df = pd.DataFrame(tab_tours_tortues + tab_tours_lievre)
+
+ax = sns.violinplot(x="joueur", y="tours", data=df)
+plt.show()
