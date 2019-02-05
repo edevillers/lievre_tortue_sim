@@ -1,10 +1,11 @@
 import random
-# import pylab
+# import seaborn as sns
 
 class Game:
     '''la classe du jeu, qui comprend un board et des methodes pour progresser'''
 
-    def __init__(self):
+    def __init__(self, verbose=False):
+        self.verbose = verbose
         self.board = {0: 'start'
                       , 1: 'vide'
                       , 2: 'laitue'
@@ -59,52 +60,65 @@ class Game:
                         }
         self.position = 0
         self.turn = 0
+        
 
     def playTurnTortue(self, dice):
         '''on lance un de'''
         resultat = dice.throw()
         if resultat == 'tortue':
-            print('yeah une tortue !')
+            if self.verbose:
+                print('yeah une tortue !')
             self.position = self.getNextTurtle()
             self.turn += 1
-            print('un tour de plus !')
+            if self.verbose:
+                print('un tour de plus !')
             return
         else:
             self.position += resultat
             if self.board[self.position] == 'laitue':
-                print('yeah ! une laitue. on rebrasse')
+                if self.verbose:
+                    print('yeah ! une laitue. on rebrasse')
                 self.playTurnTortue(dice)
             else:
                 self.turn += 1
-                print('un tour de plus !')
+                if self.verbose:
+                    print('un tour de plus !')
                 return
 
     def playTurnLapin(self, dice):
         '''on lance un de'''
         resultat = dice.throw()
         if resultat == 'lievre':
-            print('yeah un lapin !')
+            if self.verbose:
+                print('yeah un lapin !')
             self.position = self.getNextRabbit()
             self.turn += 1
-            print('un tour de plus !')
+            if self.verbose:
+                print('un tour de plus !')
             return
         elif resultat == 'sleep':
-            print('non... on dort')
+            if self.verbose:
+                print('non... on dort')
             self.turn+= 1
-            print('un tour de plus !')
+            if self.verbose:
+                print('un tour de plus !')
         else:
             self.position += resultat
             if self.board[self.position] == 'carotte':
-                print('yeah ! une carotte. on rebrasse')
+                if self.verbose:
+                    print('yeah ! une carotte. on rebrasse')
                 self.playTurnLapin(dice)
             elif self.board[self.position] == 'sieste':
-                print('oh non... la sieste. on recule de deux')
+                if self.verbose:
+                    print('oh non... la sieste. on recule de deux')
                 self.position -= 2
                 self.turn += 1
-                print('un tour de plus!')
+                if self.verbose:
+                    print('un tour de plus!')
             else:
                 self.turn += 1
-                print('un tour de plus !')
+                if self.verbose:
+                    print('un tour de plus !')
                 return
 
 
@@ -123,59 +137,69 @@ class Game:
 class TurtleDice:
     '''un petit de special pour une tortue'''
 
-    def __init__(self):
+    def __init__(self, verbose=False):
+        self.verbose = verbose
         self.values = ['tortue', 'tortue', 2, 3, 3, 4]
 
     def throw(self):
         result = random.choice(self.values)
-        print('on a brasse: {}'.format(result))
+        if self.verbose:
+            print('on a brasse: {}'.format(result))
         return result
 
 class RabbitDice:
     '''un petit de special pour un lievre'''
 
-    def __init__(self):
+    def __init__(self, verbose=False):
+        self.verbose = verbose
         self.values = ['sleep', 'lievre', 3, 4, 5, 6]
 
     def throw(self):
         result = random.choice(self.values)
-        print('on a brasse: {}'.format(result))
+        if self.verbose:
+            print('on a brasse: {}'.format(result))
         return result
 
 #le jeu
 
-def jouerPartieTortue():
+def jouerPartieTortue(verbose=False):
     newGame = Game()
     newDice = TurtleDice()
 
     while newGame.position < len(newGame.board):
         try:
-            print('le tour {} commence'.format(newGame.turn))
+            if verbose:
+                print('le tour {} commence'.format(newGame.turn))
             newGame.playTurnTortue(newDice)
-            print('la nouvelle position est {}'.format(newGame.position))
+            if verbose:
+                print('la nouvelle position est {}'.format(newGame.position))
         except(KeyError):
-            print('la partie est terminee en {} tours'.format(newGame.turn))
+            if verbose:
+                print('la partie est terminee en {} tours'.format(newGame.turn))
             return newGame.turn
 
-def jouerPartieLapin():
-    newGame = Game()
-    newDice = RabbitDice()
+def jouerPartieLapin(verbose=False):
+    newGame = Game(verbose=verbose)
+    newDice = RabbitDice(verbose=verbose)
 
     while newGame.position < len(newGame.board):
         try:
-            print('le tour {} commence'.format(newGame.turn))
+            if verbose:
+                print('le tour {} commence'.format(newGame.turn))
             newGame.playTurnLapin(newDice)
-            print('la nouvelle position est {}'.format(newGame.position))
+            if verbose:
+                print('la nouvelle position est {}'.format(newGame.position))
         except(KeyError):
-            print('la partie est terminee en {} tours'.format(newGame.turn))
+            if verbose:
+                print('la partie est terminee en {} tours'.format(newGame.turn))
             return newGame.turn
 
 toursTortue = []
 toursLapin = []
-for i in range(0, 10000):
-    toursTortue.append(jouerPartieTortue())
+for i in range(0, 100):
+    toursTortue.append(jouerPartieTortue(verbose=True))
 
-for i in range(0, 10000):
+for i in range(0, 100):
     toursLapin.append(jouerPartieLapin())
 
 print('le nb de tours moyens pour la tortue est: {}'.format(float(sum(toursTortue))/len(toursTortue)))
